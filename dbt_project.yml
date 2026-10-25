@@ -1,0 +1,31 @@
+name: lego_fabric
+version: "1.0.0"
+config-version: 2
+require-dbt-version: [">=1.9.0", "<2.0.0"]
+
+# Le dbt job Fabric génère le profil à partir de la connexion choisie dans l'UI.
+# Pour un run local, voir profiles.example.yml.
+profile: lego_fabric
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+
+vars:
+  # Lakehouse qui contient les tables brutes chargées par le notebook
+  bronze_lakehouse: lh_lego
+  bronze_schema: bronze
+
+models:
+  lego_fabric:
+    # Tout en table des deux côtés : chaque modèle écrit physiquement ses données,
+    # ce qui rend la comparaison Warehouse / Lakehouse équitable et les temps par modèle lisibles.
+    # Dans un vrai projet, le staging serait plutôt en view.
+    +materialized: table
+    +file_format: delta   # utilisé par le Lakehouse, ignoré par le Warehouse
+    staging:
+      +tags: ["staging"]
+    intermediate:
+      +tags: ["intermediate"]
+    marts:
+      +tags: ["marts"]

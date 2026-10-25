@@ -1,0 +1,32 @@
+# Uniquement pour un run local (dbt Core sur ton poste).
+# Dans le dbt job Fabric, le profil est généré à partir de la connexion choisie dans l'UI.
+#
+#   dbt build --target warehouse
+#   dbt build --target lakehouse
+#
+lego_fabric:
+  target: warehouse
+  outputs:
+
+    warehouse:
+      type: fabric
+      driver: "ODBC Driver 18 for SQL Server"
+      server: "<sql-connection-string>.datawarehouse.fabric.microsoft.com"
+      port: 1433
+      database: wh_lego
+      schema: lego
+      authentication: CLI
+      threads: 4
+
+    lakehouse:
+      type: fabricspark
+      method: livy
+      endpoint: https://api.fabric.microsoft.com/v1
+      workspaceid: "<workspace-id>"
+      lakehouseid: "<lakehouse-id>"
+      lakehouse: lh_lego
+      schema: lego            # doit être différent du nom du lakehouse (lakehouse avec schémas)
+      authentication: CLI
+      threads: 4
+      spark_config:
+        name: dbt-lego        # clé obligatoire pour dbt-fabricspark 1.12.x

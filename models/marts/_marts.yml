@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: mart_sets
+    description: Un set par ligne, avec son thème racine et ses statistiques de pièces.
+    columns:
+      - name: set_num
+        data_tests: [unique, not_null]
+      - name: root_theme_id
+        data_tests: [not_null]
+
+  - name: mart_set_size_by_year
+    description: Nombre de sets et taille moyenne par année de sortie.
+    columns:
+      - name: release_year
+        data_tests: [unique, not_null]
+
+  - name: mart_colors_by_theme
+    description: Part de chaque couleur dans les pièces d'un thème racine.
+    columns:
+      - name: theme_color_key
+        data_tests: [unique, not_null]
+      - name: color_name
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+
+  - name: mart_top_parts
+    description: Classement des pièces par quantité totale utilisée dans les sets.
+    columns:
+      - name: part_num
+        data_tests: [unique, not_null]

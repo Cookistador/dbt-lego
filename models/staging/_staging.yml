@@ -1,0 +1,91 @@
+version: 2
+
+models:
+  - name: stg_themes
+    description: Thèmes LEGO, typés. Un thème peut avoir un thème parent.
+    columns:
+      - name: theme_id
+        data_tests: [unique, not_null]
+      - name: parent_theme_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_themes')
+                field: theme_id
+
+  - name: stg_colors
+    description: Couleurs Rebrickable avec leur code hexadécimal.
+    columns:
+      - name: color_id
+        data_tests: [unique, not_null]
+      - name: is_transparent
+        data_tests: [not_null]
+
+  - name: stg_part_categories
+    columns:
+      - name: part_category_id
+        data_tests: [unique, not_null]
+
+  - name: stg_parts
+    columns:
+      - name: part_num
+        data_tests: [unique, not_null]
+      - name: part_category_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_part_categories')
+                field: part_category_id
+
+  - name: stg_sets
+    columns:
+      - name: set_num
+        data_tests: [unique, not_null]
+      - name: release_year
+        data_tests: [not_null]
+      - name: theme_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_themes')
+                field: theme_id
+
+  - name: stg_inventories
+    description: >
+      Un set peut avoir plusieurs versions d'inventaire. Les inventaires
+      des minifigs (set_num en fig-...) sont aussi dans cette table.
+    columns:
+      - name: inventory_id
+        data_tests: [unique, not_null]
+      - name: inventory_version
+        data_tests: [not_null]
+
+  - name: stg_inventory_parts
+    description: Une ligne par inventaire, pièce, couleur et statut de pièce de rechange.
+    columns:
+      - name: inventory_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_inventories')
+                field: inventory_id
+      - name: quantity
+        data_tests: [not_null]
+      - name: color_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_colors')
+                field: color_id
+              config:
+                severity: warn
+      - name: part_num
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_parts')
+                field: part_num
+              config:
+                severity: warn

@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: rebrickable
+    description: >
+      Tables brutes chargées par le notebook nb_load_rebrickable_bronze.
+      Toutes les colonnes sont en texte. Le Warehouse les lit via le SQL analytics
+      endpoint du Lakehouse (nommage à trois parties, même workspace).
+    database: "{{ var('bronze_lakehouse') }}"
+    schema: "{{ var('bronze_schema') }}"
+    tables:
+      - name: themes
+      - name: colors
+      - name: part_categories
+      - name: parts
+      - name: sets
+      - name: inventories
+      - name: inventory_parts

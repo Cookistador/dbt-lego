@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: int_themes_flattened
+    description: Chaque thème avec son parent direct et son thème racine.
+    columns:
+      - name: theme_id
+        data_tests: [unique, not_null]
+      - name: root_theme_id
+        data_tests: [not_null]
+
+  - name: int_set_parts
+    description: >
+      Pièces de chaque set, dernière version d'inventaire, sans pièces de rechange.
+      Les pièces des minifigs incluses dans un set ne sont pas comptées ici.
+    columns:
+      - name: set_part_color_key
+        data_tests: [unique, not_null]
+      - name: quantity
+        data_tests: [not_null]

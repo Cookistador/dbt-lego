@@ -1,0 +1,6 @@
+target/
+dbt_packages/
+logs/
+profiles.yml
+livy-session-id.txt
+.DS_Store
